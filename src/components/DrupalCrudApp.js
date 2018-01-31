@@ -52,9 +52,12 @@ DrupalCrudApp.propTypes = {
   actions: PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state, newState) {
-  const { drupalLoadReducer: { data } } = state || { drupalLoadReducer: {data: {}}};
-  return { data };
+function mapStateToProps(state) {
+  // const { drupalLoadReducer: { data } } = state || { drupalLoadReducer: {data: {}}};
+  // return { data };
+  return {
+    data: state.drupalLoadReducer.data
+  };
 }
 
 function MapDispatchToProps(dispatch) {

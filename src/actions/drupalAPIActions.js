@@ -59,7 +59,9 @@ export function doLoadDrupalData() {
         }, {});
 
         let initialReturn = JSON.parse(JSON.stringify(result));
-        dispatch(receiveDrupalData(initialReturn));
+        // @Steve: there seems to be an issue where the dispatch only fires here onload. I suspect it's preventing multiple times within a timeframe.
+        // So I commented this out and just waiting till it fires below within the .then()
+        // dispatch(receiveDrupalData(initialReturn));
         initialReturn = null; // GC.
 
         const imageRequests = [];
@@ -69,16 +71,17 @@ export function doLoadDrupalData() {
           imageRequests.push(drupalAPI.getAllDrupalImg(`${DRUPAL_API_LOC}/${uuid}/field_dog_picture`));
         });
 
-        Promise.all(imageRequests)
-          .then(values => {
+        Promise.all(imageRequests).then(values => {
             values.forEach((item, index) => {
               const { data: { attributes }, links: { self } } = item;
               const uuid = self.split('/').splice(-2, 1)[0]; // has to be a better way to get the UUID.
               result[uuid].image = DRUPAL_API_LOC.replace('\/jsonapi\/node\/dogs', attributes.url);
             });
             let imageResult = JSON.parse(JSON.stringify(result));
+            // imageResult = null; // GC.
+            return imageResult;
+          }).then(function(imageResult){
             dispatch(receiveDrupalData(imageResult));
-            imageResult = null; // GC.
           });
       })
       .catch(err => console.log(err));
