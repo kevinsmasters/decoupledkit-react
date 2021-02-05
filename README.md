@@ -1,4 +1,6 @@
 
+https://decoupledkit-react.readthedocs.io/en/develop/gettingstarted-drupal/
+
 ## Decoupled Kit Application from Acquia
 
 ### About 
